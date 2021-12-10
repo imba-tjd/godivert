@@ -3,20 +3,21 @@ package godivert
 import (
 	"errors"
 	"runtime"
-	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
 )
 
 var (
-	winDivertDLL *syscall.LazyDLL
+	winDivertDLL *windows.LazyDLL
 
-	winDivertOpen                *syscall.LazyProc
-	winDivertClose               *syscall.LazyProc
-	winDivertRecv                *syscall.LazyProc
-	winDivertSend                *syscall.LazyProc
-	winDivertHelperCalcChecksums *syscall.LazyProc
-	winDivertHelperEvalFilter    *syscall.LazyProc
-	winDivertHelperCheckFilter   *syscall.LazyProc
+	winDivertOpen                *windows.LazyProc
+	winDivertClose               *windows.LazyProc
+	winDivertRecv                *windows.LazyProc
+	winDivertSend                *windows.LazyProc
+	winDivertHelperCalcChecksums *windows.LazyProc
+	winDivertHelperEvalFilter    *windows.LazyProc
+	winDivertHelperCheckFilter   *windows.LazyProc
 )
 
 func init() {
@@ -40,7 +41,7 @@ func LoadDLL(path64, path32 string) {
 		dllPath = path32
 	}
 
-	winDivertDLL = syscall.NewLazyDLL(dllPath)
+	winDivertDLL = windows.NewLazyDLL(dllPath)
 
 	winDivertOpen = winDivertDLL.NewProc("WinDivertOpen")
 	winDivertClose = winDivertDLL.NewProc("WinDivertClose")
@@ -63,7 +64,7 @@ func NewWinDivertHandle(filter string) (*WinDivertHandle, error) {
 // and flags are the used flags used
 // https://reqrypt.org/windivert-doc.html#divert_open
 func NewWinDivertHandleWithFlags(filter string, flags uint8) (*WinDivertHandle, error) {
-	filterBytePtr, err := syscall.BytePtrFromString(filter)
+	filterBytePtr, err := windows.BytePtrFromString(filter)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,7 @@ func NewWinDivertHandleWithFlags(filter string, flags uint8) (*WinDivertHandle, 
 		uintptr(0),
 		uintptr(flags))
 
-	if handle == uintptr(syscall.InvalidHandle) {
+	if handle == uintptr(windows.InvalidHandle) {
 		return nil, err
 	}
 
@@ -87,7 +88,7 @@ func NewWinDivertHandleWithFlags(filter string, flags uint8) (*WinDivertHandle, 
 // Create a new WinDivertHandle by calling WinDivertOpen and returns it
 // https://reqrypt.org/windivert-doc.html#divert_open
 func WinDivertOpen(filter string, layer uint8, priority uint16, flags uint8) (*WinDivertHandle, error) {
-	filterBytePtr, err := syscall.BytePtrFromString(filter)
+	filterBytePtr, err := windows.BytePtrFromString(filter)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +98,7 @@ func WinDivertOpen(filter string, layer uint8, priority uint16, flags uint8) (*W
 		uintptr(priority),
 		uintptr(flags))
 
-	if handle == uintptr(syscall.InvalidHandle) {
+	if handle == uintptr(windows.InvalidHandle) {
 		return nil, err
 	}
 
@@ -183,7 +184,7 @@ func (wd *WinDivertHandle) HelperCalcChecksum(packet *Packet) {
 func HelperCheckFilter(filter string) (bool, int) {
 	var errorPos uint
 
-	filterBytePtr, _ := syscall.BytePtrFromString(filter)
+	filterBytePtr, _ := windows.BytePtrFromString(filter)
 
 	success, _, _ := winDivertHelperCheckFilter.Call(
 		uintptr(unsafe.Pointer(filterBytePtr)),
@@ -201,7 +202,7 @@ func HelperCheckFilter(filter string) (bool, int) {
 // Returns true if the packet matches the filter
 // https://reqrypt.org/windivert-doc.html#divert_helper_eval_filter
 func HelperEvalFilter(packet *Packet, filter string) (bool, error) {
-	filterBytePtr, err := syscall.BytePtrFromString(filter)
+	filterBytePtr, err := windows.BytePtrFromString(filter)
 	if err != nil {
 		return false, err
 	}
