@@ -82,8 +82,12 @@ func OpenHandle(filter string, layer Layer, priority uint16, flags OpenFlag) (*W
 // Close the Handle
 // See https://reqrypt.org/windivert-doc.html#divert_close
 func (wd *WinDivertHandle) Close() error {
-	_, _, err := winDivertClose.Call(wd.handle)
+	result, _, err := winDivertClose.Call(wd.handle)
 	wd.open = false
+
+	if result == 0 {
+		return nil
+	}
 	return err
 }
 
