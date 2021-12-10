@@ -4,17 +4,21 @@ Go bindings for [WinDivert](https://github.com/basil00/Divert).
 
 WinDivert is a user-mode packet capture-and-divert package for Windows.
 
+_Note: this project was forked from <https://github.com/Macronut/godivert>, which itself was forked from
+<https://github.com/williamfhe/godivert>._
+
 ## Installation
 
 ```bash
-go get github.com/williamfhe/godivert
+go get github.com/Crosse/godivert
 ```
 
 ## Introduction
 
-The binding's documentation can be found [Here](https://godoc.org/github.com/williamfhe/godivert).
+The binding's documentation can be found [Here](https://godoc.org/github.com/Crosse/godivert).
 
-If you don't have the **WinDivert dll** installed on your System or you want to load a specific **WinDivert dll** you should do :
+If you don't have the **WinDivert dll** installed on your System or you want to load a specific **WinDivert dll** you
+should do :
 
 ```go
 godivert.LoadDLL("PathToThe64bitDLL", "PathToThe32bitDLL")
@@ -25,7 +29,8 @@ The path can be a **relative path** to the *.exe* **current directory** or an **
 Note that the driver must be in the **same directory** as the **dll**.
 **LoadDLL** will then load the **dll** depending on your **OS architecture**.
 
-To start create a new instance of **WinDivertHandle** by calling **NewWinDivertHandle** and passing the filter as a parameter.
+To start create a new instance of **WinDivertHandle** by calling **NewWinDivertHandle** and passing the filter as a
+parameter.
 
 Documentation of the **filter** can be found [Here](https://reqrypt.org/windivert-doc.html#filter_language).
 
@@ -35,7 +40,8 @@ winDivert, err := godivert.NewWinDivertHandle("Your filter here")
 
 **WinDivertHandle** is struct that you can use to call WinDivert's function like **Recv** or **Send**.
 
-You can divert a packet from the network stack by using **winDivert.Recv()** where **winDivert** is an instance of **WinDivertHandle**.
+You can divert a packet from the network stack by using **winDivert.Recv()** where **winDivert** is an instance of
+**WinDivertHandle**.
 
 ```go
 packet, err := winDivert.Recv()
@@ -48,12 +54,13 @@ packet.SetDstPort(1234) // Sets the destination port
 packet.Send(winDivert) // Sends the packet back on the network stack
 ```
 
-You can get and set values from the packet's header by using the **_header_** package. Documentation on this package can be found [Here](https://godoc.org/github.com/williamfhe/godivert/header)
-.
+You can get and set values from the packet's header by using the **_header_** package. Documentation on this package can
+be found [Here](https://godoc.org/github.com/Crosse/godivert/header) .
 
 As the packet has been modified the **checksums** have to be recalculated before sending it back on the network stack.
 
-It is done automatically if the packet has been modified when calling **packet.Send** but you can do it manually by calling **packet.CalcNewChecksum**.
+It is done automatically if the packet has been modified when calling **packet.Send** but you can do it manually by
+calling **packet.CalcNewChecksum**.
 
 To receive packets you can also use **winDivert.Packets**.
 
@@ -63,7 +70,8 @@ packetChan, err := winDivert.Packets()
 
 Here **_packetChan_** is a channel of **\*godivert.Packet** coming directly from the network stack.
 
-Note that all packets diverted are guaranteed to match the filter given in **godivert.NewWinDivertHandle("You filter here")**
+Note that all packets diverted are guaranteed to match the filter given in **godivert.NewWinDivertHandle("You filter
+here")**
 
 ## Examples
 
@@ -74,7 +82,7 @@ package main
 
 import (
     "fmt"
-    "github.com/williamfhe/godivert"
+    "github.com/Crosse/godivert"
 )
 
 func main() {
@@ -106,7 +114,7 @@ package main
 import (
     "net"
     "time"
-    "github.com/williamfhe/godivert"
+    "github.com/Crosse/godivert"
 )
 
 var cloudflareDNS = net.ParseIP("1.1.1.1")
@@ -153,8 +161,8 @@ package main
 import (
     "fmt"
     "time"
-    "github.com/williamfhe/godivert"
-    "github.com/williamfhe/godivert/header"
+    "github.com/Crosse/godivert"
+    "github.com/Crosse/godivert/header"
 )
 
 var icmpv4, icmpv6, udp, tcp, unknown, served uint
