@@ -52,42 +52,12 @@ func LoadDLL(path64, path32 string) {
 	winDivertHelperCheckFilter = winDivertDLL.NewProc("WinDivertHelperCheckFilter")
 }
 
-// Create a new WinDivertHandle by calling WinDivertOpen and returns it
-// The string parameter is the fiter that packets have to match
-// https://reqrypt.org/windivert-doc.html#divert_open
-func NewWinDivertHandle(filter string) (*WinDivertHandle, error) {
-	return NewWinDivertHandleWithFlags(filter, 0)
+func OpenHandleWithFilter(filter string) (*WinDivertHandle, error) {
+	return OpenHandle(filter, LayerNetwork, PriorityDefault, OpenFlagSniff|OpenFlagReceiveOnly)
 }
 
-// Create a new WinDivertHandle by calling WinDivertOpen and returns it
-// The string parameter is the fiter that packets have to match
-// and flags are the used flags used
-// https://reqrypt.org/windivert-doc.html#divert_open
-func NewWinDivertHandleWithFlags(filter string, flags uint8) (*WinDivertHandle, error) {
-	filterBytePtr, err := windows.BytePtrFromString(filter)
-	if err != nil {
-		return nil, err
-	}
-
-	handle, _, err := winDivertOpen.Call(uintptr(unsafe.Pointer(filterBytePtr)),
-		uintptr(0),
-		uintptr(0),
-		uintptr(flags))
-
-	if handle == uintptr(windows.InvalidHandle) {
-		return nil, err
-	}
-
-	winDivertHandle := &WinDivertHandle{
-		handle: handle,
-		open:   true,
-	}
-	return winDivertHandle, nil
-}
-
-// Create a new WinDivertHandle by calling WinDivertOpen and returns it
-// https://reqrypt.org/windivert-doc.html#divert_open
-func WinDivertOpen(filter string, layer uint8, priority uint16, flags uint8) (*WinDivertHandle, error) {
+// OpenHandle opens a new WinDivert handle.
+func OpenHandle(filter string, layer Layer, priority uint16, flags OpenFlag) (*WinDivertHandle, error) {
 	filterBytePtr, err := windows.BytePtrFromString(filter)
 	if err != nil {
 		return nil, err
