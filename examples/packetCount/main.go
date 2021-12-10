@@ -34,7 +34,7 @@ func countPacket(packet *godivert.Packet) {
 }
 
 func main() {
-	winDivert, err := godivert.NewWinDivertHandle("true")
+	winDivert, err := godivert.OpenHandleWithFilter("true")
 	if err != nil {
 		panic(err)
 	}

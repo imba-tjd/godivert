@@ -18,7 +18,7 @@ func checkPacket(wd *godivert.WinDivertHandle, packetChan <-chan *godivert.Packe
 }
 
 func main() {
-	winDivert, err := godivert.NewWinDivertHandle("icmp")
+	winDivert, err := godivert.OpenHandle("icmp", godivert.LayerNetwork, godivert.PriorityDefault, godivert.OpenFlagNone)
 	if err != nil {
 		panic(err)
 	}
