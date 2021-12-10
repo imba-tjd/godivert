@@ -1,12 +1,9 @@
 package header
 
 import (
-	"fmt"
-)
-
-import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 )
 
 // Represents a ICMP header

@@ -20,5 +20,5 @@ func main() {
 
 	fmt.Println(packet)
 
-    packet.Send(winDivert)
+	packet.Send(winDivert)
 }
