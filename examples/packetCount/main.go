@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/williamfhe/godivert"
-	"github.com/williamfhe/godivert/header"
 	"time"
+
+	"github.com/Crosse/godivert"
+	"github.com/Crosse/godivert/header"
 )
 
 var icmpv4, icmpv6, udp, tcp, unknown, served uint
