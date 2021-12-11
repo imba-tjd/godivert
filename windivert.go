@@ -146,11 +146,15 @@ func (wd *WinDivertHandle) Send(packet *Packet) (uint, error) {
 // Calls WinDivertHelperCalcChecksum to calculate the packet's chacksum
 // https://reqrypt.org/windivert-doc.html#divert_helper_calc_checksums
 func (wd *WinDivertHandle) HelperCalcChecksum(packet *Packet) {
+	wd.RecalculateChecksums(packet, ChecksumAll)
+}
+
+func (wd *WinDivertHandle) RecalculateChecksums(packet *Packet, flags ChecksumFlag) {
 	winDivertHelperCalcChecksums.Call(
 		uintptr(unsafe.Pointer(&packet.Raw[0])),
 		uintptr(packet.PacketLen),
 		uintptr(unsafe.Pointer(&packet.Addr)),
-		uintptr(0))
+		uintptr(flags))
 }
 
 // Take the given filter and check if it contains any error
