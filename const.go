@@ -56,3 +56,14 @@ func (d Direction) String() string {
 	}
 	return "Outbound"
 }
+
+type ChecksumFlag int64
+
+const (
+	ChecksumAll      = 0x00
+	ChecksumNoIP     = 0x01
+	ChecksumNoICMP   = 0x02
+	ChecksumNoICMPv6 = 0x04
+	ChecksumNoTCP    = 0x08
+	ChecksumNoUDP    = 0x10
+)
