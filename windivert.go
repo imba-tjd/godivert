@@ -86,9 +86,9 @@ func (wd *WinDivertHandle) Close() error {
 	wd.open = false
 
 	if result == 0 {
-		return nil
+		return err
 	}
-	return err
+	return nil
 }
 
 // Divert a packet from the Network Stack
