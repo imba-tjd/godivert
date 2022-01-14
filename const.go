@@ -1,13 +1,22 @@
 package godivert
 
-type Direction bool
+import "fmt"
+
+type Direction int
+
+func (d Direction) String() string {
+	if d == WinDivertDirectionInbound {
+		return "Inbound"
+	}
+	return "Outbound"
+}
 
 const (
 	PacketBufferSize   = 1500
 	PacketChanCapacity = 256
 
-	WinDivertDirectionOutbound Direction = false
-	WinDivertDirectionInbound  Direction = true
+	WinDivertDirectionOutbound Direction = 1
+	WinDivertDirectionInbound  Direction = 0
 )
 
 type OpenFlag uint8
@@ -37,6 +46,23 @@ const (
 	LayerReflect
 )
 
+func (l Layer) String() string {
+	switch l {
+	case LayerNetwork:
+		return "Network"
+	case LayerForward:
+		return "Forward"
+	case LayerFlow:
+		return "Flow"
+	case LayerSocket:
+		return "Socket"
+	case LayerReflect:
+		return "Reflect"
+	default:
+		return fmt.Sprintf("InvalidLayer(%d)", int(l))
+	}
+}
+
 type Priority int16
 
 const (
@@ -50,13 +76,6 @@ const (
 	PriorityLowest = -PriorityMax
 )
 
-func (d Direction) String() string {
-	if bool(d) {
-		return "Inbound"
-	}
-	return "Outbound"
-}
-
 type ChecksumFlag int64
 
 const (
@@ -67,3 +86,45 @@ const (
 	ChecksumNoTCP    = 0x08
 	ChecksumNoUDP    = 0x10
 )
+
+type Event int
+
+const (
+	EventNetworkPacket Event = iota
+	EventFlowEstablished
+	EventFlowDeleted
+	EventSocketBind
+	EventSocketConnect
+	EventSocketListen
+	EventSocketAccept
+	EventSocketClose
+	EventReflectOpen
+	EventReflectClose
+)
+
+func (e Event) String() string {
+	switch e {
+	case EventNetworkPacket:
+		return "NetworkPacket"
+	case EventFlowEstablished:
+		return "FlowEstablished"
+	case EventFlowDeleted:
+		return "FlowDeleted"
+	case EventSocketBind:
+		return "SocketBind"
+	case EventSocketConnect:
+		return "SocketConnect"
+	case EventSocketListen:
+		return "SocketListen"
+	case EventSocketAccept:
+		return "SocketAccept"
+	case EventSocketClose:
+		return "SocketClose"
+	case EventReflectOpen:
+		return "ReflectOpen"
+	case EventReflectClose:
+		return "ReflectClose"
+	default:
+		return "InvalidEvent"
+	}
+}
