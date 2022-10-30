@@ -1,5 +1,5 @@
-module github.com/Crosse/godivert
+module github.com/imba-tjd/godivert
 
-go 1.17
+go 1.19
 
-require golang.org/x/sys v0.0.0-20211210111614-af8b64212486
+require golang.org/x/sys v0.1.0
