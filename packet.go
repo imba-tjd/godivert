@@ -2,7 +2,7 @@ package godivert
 
 import (
 	"fmt"
-	"net"
+	"net/netip"
 
 	"github.com/Crosse/godivert/header"
 )
@@ -83,7 +83,7 @@ func (p *Packet) NextHeaderType() uint8 {
 
 // Returns the source IP of the packet
 // Shortcut for IpHdr.SrcIP()
-func (p *Packet) SrcIP() net.IP {
+func (p *Packet) SrcIP() netip.Addr {
 	p.VerifyParsed()
 
 	return p.IpHdr.SrcIP()
@@ -91,7 +91,7 @@ func (p *Packet) SrcIP() net.IP {
 
 // Sets the source IP of the packet
 // Shortcut for IpHdr.SetSrcIP()
-func (p *Packet) SetSrcIP(ip net.IP) {
+func (p *Packet) SetSrcIP(ip netip.Addr) {
 	p.VerifyParsed()
 
 	p.IpHdr.SetSrcIP(ip)
@@ -99,7 +99,7 @@ func (p *Packet) SetSrcIP(ip net.IP) {
 
 // Returns the destination IP of the packet
 // Shortcut for IpHdr.DstIP()
-func (p *Packet) DstIP() net.IP {
+func (p *Packet) DstIP() netip.Addr {
 	p.VerifyParsed()
 
 	return p.IpHdr.DstIP()
@@ -107,7 +107,7 @@ func (p *Packet) DstIP() net.IP {
 
 // Sets the destination IP of the packet
 // Shortcut for IpHdr.SetDstIP()
-func (p *Packet) SetDstIP(ip net.IP) {
+func (p *Packet) SetDstIP(ip netip.Addr) {
 	p.VerifyParsed()
 
 	p.IpHdr.SetDstIP(ip)

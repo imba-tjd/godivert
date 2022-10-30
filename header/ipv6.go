@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"net"
+	"net/netip"
 )
 
 // Represents a IPv6 header
@@ -75,29 +75,27 @@ func (h *IPv6Header) HopLimit() uint8 {
 }
 
 // Reads the header's bytes and returns the source IP
-func (h *IPv6Header) SrcIP() net.IP {
-	srcIP := make(net.IP, net.IPv6len)
-	copy(srcIP, h.Raw[8:24])
+func (h *IPv6Header) SrcIP() netip.Addr {
+	srcIP, _ := netip.AddrFromSlice(h.Raw[8:24])
 	return srcIP
 }
 
 // Reads the header's bytes and returns the destination IP
-func (h *IPv6Header) DstIP() net.IP {
-	dstIP := make(net.IP, net.IPv6len)
-	copy(dstIP, h.Raw[24:40])
+func (h *IPv6Header) DstIP() netip.Addr {
+	dstIP, _ := netip.AddrFromSlice(h.Raw[24:40])
 	return dstIP
 }
 
 // Sets the source IP of the packet
-func (h *IPv6Header) SetSrcIP(ip net.IP) {
+func (h *IPv6Header) SetSrcIP(ip netip.Addr) {
 	h.Modified = true
-	copy(h.Raw[8:24], ip)
+	copy(h.Raw[8:24], ip.AsSlice())
 }
 
 // Sets the destination IP of the packet
-func (h *IPv6Header) SetDstIP(ip net.IP) {
+func (h *IPv6Header) SetDstIP(ip netip.Addr) {
 	h.Modified = true
-	copy(h.Raw[24:40], ip)
+	copy(h.Raw[24:40], ip.AsSlice())
 }
 
 // Always returns 0 and an error as IPv6 has no checksum

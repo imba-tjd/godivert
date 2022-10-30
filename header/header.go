@@ -1,6 +1,6 @@
 package header
 
-import "net"
+import "net/netip"
 
 // Represents a IPv4 or IPv6 Header
 type IPHeader interface {
@@ -9,10 +9,10 @@ type IPHeader interface {
 	Version() int
 	HeaderLen() uint8
 	NextHeader() uint8
-	SrcIP() net.IP
-	DstIP() net.IP
-	SetSrcIP(net.IP)
-	SetDstIP(net.IP)
+	SrcIP() netip.Addr
+	DstIP() netip.Addr
+	SetSrcIP(netip.Addr)
+	SetDstIP(netip.Addr)
 	Checksum() (uint16, error)
 	NeedNewChecksum() bool
 }

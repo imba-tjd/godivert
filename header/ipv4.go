@@ -3,7 +3,7 @@ package header
 import (
 	"encoding/binary"
 	"fmt"
-	"net"
+	"net/netip"
 )
 
 // Represents a IPv4 Header
@@ -95,13 +95,13 @@ func (h *IPv4Header) Checksum() (uint16, error) {
 }
 
 // Reads the header's bytes and returns the source IP
-func (h *IPv4Header) SrcIP() net.IP {
-	return net.IPv4(h.Raw[12], h.Raw[13], h.Raw[14], h.Raw[15])
+func (h *IPv4Header) SrcIP() netip.Addr {
+	return netip.AddrFrom4([4]byte{h.Raw[12], h.Raw[13], h.Raw[14], h.Raw[15]})
 }
 
 // Reads the header's bytes and returns the destination IP
-func (h *IPv4Header) DstIP() net.IP {
-	return net.IPv4(h.Raw[16], h.Raw[17], h.Raw[18], h.Raw[19])
+func (h *IPv4Header) DstIP() netip.Addr {
+	return netip.AddrFrom4([4]byte{h.Raw[16], h.Raw[17], h.Raw[18], h.Raw[19]})
 }
 
 // Reads the header's bytes and returns the options as a byte slice if they exist or nil
@@ -115,15 +115,15 @@ func (h *IPv4Header) Options() []byte {
 }
 
 // Sets the source IP of the packet
-func (h *IPv4Header) SetSrcIP(ip net.IP) {
+func (h *IPv4Header) SetSrcIP(ip netip.Addr) {
 	h.Modified = true
-	copy(h.Raw[12:16], ip[12:16])
+	copy(h.Raw[12:16], ip.AsSlice())
 }
 
 // Sets the destination IP of the packet
-func (h *IPv4Header) SetDstIP(ip net.IP) {
+func (h *IPv4Header) SetDstIP(ip netip.Addr) {
 	h.Modified = true
-	copy(h.Raw[16:20], ip[12:16])
+	copy(h.Raw[16:20], ip.AsSlice())
 }
 
 // Returns true if the header has been modified
