@@ -1,3 +1,12 @@
+This is a fork of https://github.com/Crosse/godivert with:
+
+* A fix from https://github.com/Mrs4s/godivert
+* Go 1.18 net/netip.Addr
+
+The examples are not changed and are considered broken.
+
+---
+
 # GoDivert
 
 Go bindings for [WinDivert](https://github.com/basil00/Divert).
